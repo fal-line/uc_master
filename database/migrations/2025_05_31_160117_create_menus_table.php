@@ -14,10 +14,23 @@ return new class extends Migration
         Schema::create('menus', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('price');
-            $table->string('img_url');
+            $table->string('description');
             $table->enum('category', ['Coffee', 'Non-coffee','Snack']);
+            $table->integer('price');
+            $table->boolean('most_ordered');
+            $table->string('img_url');
         });
+
+        DB::table('menus')->insert(
+            array(
+            'name' => 'Latte',
+            'description'=> 'A creamy blend of espresso and steamed milk.',
+            'category'=> 'Coffee',
+            'price' => '13500',
+            'most_ordered'=> false,
+            'img_url' => 'img/coffee_placeholder.png',
+            )
+        );
     }
 
     /**
