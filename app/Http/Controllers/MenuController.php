@@ -10,32 +10,20 @@ class MenuController extends Controller
 {
     public function index()
     {
-        $menuItems = [
-            [
-                'name' => 'Caffee Latte',
-                'description' => 'A creamy blend of espresso and steamed milk.',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'most_ordered' => true,
-                'image' => 'img/coffee_placeholder.png'
-            ],
-            [
-                'name' => 'Espresso',
-                'description' => 'Strong and bold single shot of coffee.',
-                'category' => 'Coffee',
-                'price' => 18000,
-                'most_ordered' => false,
-                'image' => 'img/coffee_placeholder.png'
-            ],
-            [
-                'name' => 'Friench Fries',
-                'description' => 'Crispy golden fries served with sauce.',
-                'category' => 'Snack',
-                'price' => 22000,
-                'most_ordered' => true,
-                'image' => 'img/coffee_placeholder.png'
-            ],
-        ];
+        $menuItems = DB::table('menus')
+            ->select('name', 'description', 'category', 'price', 'most_ordered', 'img_url')
+            ->get();
+            
+        // $menuItems = [
+        //     [
+        //         'name' => 'Friench Fries',
+        //         'description' => 'Crispy golden fries served with sauce.',
+        //         'category' => 'Snack',
+        //         'price' => 22000,
+        //         'most_ordered' => true,
+        //         'image' => 'img/coffee_placeholder.png'
+        //     ],
+        // ];
 
         // Group by category manually
         $grouped = collect($menuItems)->groupBy('category');

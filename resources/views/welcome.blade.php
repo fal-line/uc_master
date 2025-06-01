@@ -39,20 +39,20 @@
                   <div class="card">
                       <div class="card-body d-flex gap-3 align-items-center">
                           {{-- Gambar --}}
-                          <img src="{{ $item['image'] }}" alt="{{ $item['name'] }}" class="menu-img">
+                          <img src="{{ $item->img_url }}" alt="{{ $item->name }}" class="menu-img">
 
                           {{-- Konten --}}
                           <div class="flex-grow-1">
-                              <h5 class="card-title">{{ $item['name'] }}</h5>
-                              @if ($item['most_ordered'])
+                              <h5 class="card-title">{{ $item->name }}</h5>
+                              @if ($item->most_ordered)
                                 <span class="badge bg-danger text-white">Most Ordered</span>
                               @endif
-                              <p class="card-text small text-muted">{{ $item['description'] }}</p>
+                              <p class="card-text small text-muted">{{ $item->description }}</p>
                           </div>
 
                           {{-- Harga --}}
                           <div class="text-end price mt-3 mt-md-0">
-                              Rp.{{ number_format($item['price'], 2, ',', '.') }}
+                              Rp.{{ number_format($item->price, 2, ',', '.') }}
                           </div>
                       </div>
                   </div>

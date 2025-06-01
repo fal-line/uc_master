@@ -31,6 +31,40 @@ return new class extends Migration
             'img_url' => 'img/coffee_placeholder.png',
             )
         );
+
+        DB::table('menus')->insert(
+            array(
+            'name' => 'Cappucina',
+            'description'=> 'A blend of espresso, steamed milk, and foamed milk.',
+            'category'=> 'Coffee',
+            'price' => '15000',
+            'most_ordered'=> true,
+            'img_url' => 'img/coffee_placeholder.png',
+            )
+        );
+        
+        DB::table('menus')->insert(
+            array(
+            'name' => 'Indomitable',
+            'description'=> 'World number one "Fried Noodle", plated with egg and meat.',
+            'category'=> 'Snack',
+            'price' => '28000',
+            'most_ordered'=> true,
+            'img_url' => 'img/coffee_placeholder.png',
+            )
+        );
+        
+        DB::table('menus')->insert(
+            array(
+            'name' => 'French Fries',
+            'description'=> 'Your one and only friend on filling craving.',
+            'category'=> 'Snack',
+            'price' => '22000',
+            'most_ordered'=> false,
+            'img_url' => 'img/coffee_placeholder.png',
+            )
+        );
+        
     }
 
     /**
