@@ -19,9 +19,19 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId($cartForeignName)->constrained($cartTableName)->cascadeOnDelete();
-            $table->morphs('itemable');
+            $table->morphs('itemable'); // itemable_id & itemable_type
+
             $table->unsignedInteger('quantity')->default(1);
-            $table->json('options')->nullable();
+            $table->unsignedInteger('price'); // harga satuan
+            $table->unsignedInteger('subtotal')->nullable(); // harga total (qty * price)
+
+            // Tambahan atribut khusus untuk POS
+            $table->string('variant')->nullable();
+            $table->string('size')->nullable();
+            $table->string('ice')->nullable();
+            $table->string('sugar')->nullable();
+
+            $table->json('options')->nullable(); // bisa tetap dipakai untuk fleksibilitas
 
             $table->timestamps();
         });

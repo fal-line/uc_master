@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('img_url');
         });
 
+
+        // seeding data setelah migration
         DB::table('menus')->insert(
             array(
             'name' => 'Latte',
@@ -53,7 +55,7 @@ return new class extends Migration
             'img_url' => 'img/coffee_placeholder.png',
             )
         );
-        
+
         DB::table('menus')->insert(
             array(
             'name' => 'French Fries',

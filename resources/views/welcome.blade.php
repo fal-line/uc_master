@@ -52,7 +52,7 @@
 
                           {{-- Harga --}}
                           <div class="text-end price mt-3 mt-md-0">
-                              Rp.{{ number_format($item->price, 2, ',', '.') }}
+                              Rp.{{ number_format($item->price , 2, ',', '.') }}
                           </div>
                       </div>
                   </div>

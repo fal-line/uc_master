@@ -14,6 +14,7 @@ class MenuController extends Controller
             ->select('name', 'description', 'category', 'price', 'most_ordered', 'img_url')
             ->get();
             
+        
         // $menuItems = [
         //     [
         //         'name' => 'Friench Fries',
@@ -29,69 +30,94 @@ class MenuController extends Controller
         $grouped = collect($menuItems)->groupBy('category');
 
         return view('welcome', ['menuItems' => $grouped]);
-        $menuItems = MenuItem::all()->groupBy('category');
-        return view('menu.index', compact('menuItems'));
+        // $menuItems = MenuItem::all()->groupBy('category');
+        // return view('menu.index', compact('menuItems'));
     }
 
     public function orderPage()
     {
-        $menuItems = [
-            [
-                'id' => 1,
-                'name' => 'Caffee Latte',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 2,
-                'name' => 'Espresso',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 3,
-                'name' => 'Moccachino',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 4,
-                'name' => 'Caffee Latte',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 5,
-                'name' => 'Caffee Latte',
-                'category' => 'Drinks',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 6,
-                'name' => 'Caffee Latte',
-                'category' => 'Coffee',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ],
-            [
-                'id' => 11,
-                'name' => 'Friench Fries',
-                'category' => 'Snack',
-                'price' => 22000,
-                'image' => 'img/item_placeholder.png'
-            ]
-        ];
+        // $menuItems = [
+        //     [
+        //         'id' => 1,
+        //         'name' => 'Caffee Latte',
+        //         'category' => 'Coffee',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 2,
+        //         'name' => 'Espresso',
+        //         'category' => 'Coffee',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 3,
+        //         'name' => 'Moccachino',
+        //         'category' => 'Coffee',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 4,
+        //         'name' => 'Caffee Latte',
+        //         'category' => 'Coffee',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 5,
+        //         'name' => 'Caffee Latte',
+        //         'category' => 'Drinks',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 6,
+        //         'name' => 'Caffee Latte',
+        //         'category' => 'Coffee',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ],
+        //     [
+        //         'id' => 11,
+        //         'name' => 'Friench Fries',
+        //         'category' => 'Snack',
+        //         'price' => 22000,
+        //         'image' => 'img/item_placeholder.png'
+        //     ]
+        // ];
 
         // Duplicate for layout preview
         // $menuItems = array_merge($menuItems);
+        $menuItems = DB::table('menus')
+            ->select('name', 'description', 'category', 'price', 'most_ordered', 'img_url')
+            ->get();
 
         $groupedItems = collect($menuItems)->groupBy('category');
 
-        return view('order.index', compact('groupedItems'));
+        $basketOwner = DB::table('carts')
+            ->where('user_id', Auth::id())
+            ->latest() // ambil yang paling baru
+            ->first();
+            
+        // $pass = collect($basketOwner);s
+
+        $baskets = DB::table('cart_items')
+            ->where('cart_id', $basketOwner->id)
+            ->join('menus', 'itemable_id', '=', 'menus.id')
+            // ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'quantity', 'subtotal')
+            ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'menus.price','quantity', 'subtotal')
+            ->get();
+
+        return view('home', ['baskets' => $baskets], compact('groupedItems'));
+        // return dd($baskets);
     }
+    
 }
+
+// cartItems
+// itemable_type, quantity, price, subtotal, variant, size, ice, sugar, options, created_at, updated_at
+
+// menus
+// id, name, description, category, price, most_ordered, img_url
