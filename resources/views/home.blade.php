@@ -67,6 +67,9 @@
                 <p class="text-muted mb-2">Rp.{{ number_format($item->price, 0, ',', '.') }},00</p>
               </div>
               
+                <!-- //i close project here, to sleep and as reminder -->
+                <!-- //NEXT STEP IS BUILDING CART CRUD AND PUSH TO OrderedItems & Order :) -->
+
             </div>
           </div>
         </div>
