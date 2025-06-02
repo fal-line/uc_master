@@ -60,13 +60,13 @@
                 @php $total = 0; @endphp
                   @foreach ($baskets as $index => $rock)
                       @php $total += $rock->quantity * $rock->price; @endphp
-                      <div class="col">
+                      <div class="col" style="margin: 20px 0 0 0;">
                         <div class="card text-left shadow-sm" >
 
                             <div class="card-body d-flex flex-column justify-content-between">
 
                               <div>
-                                  <h6 class="fw-bold">{{ $rock->name }}</h6>
+                                  <h4 class="fw-bold">{{ $rock->name }}</h4>
                                   Variant : {{ $rock->variant }} | Size : {{ $rock->size }} | Ice : {{ $rock->ice }} | Sugar : {{ $rock->sugar }}
 
                                   <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp.{{ number_format($rock->price, 0, ',', '.') }}</p>
