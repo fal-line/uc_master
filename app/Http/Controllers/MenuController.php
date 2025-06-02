@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Menu;
+use App\Models\cartItems;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -107,7 +109,7 @@ class MenuController extends Controller
             ->where('cart_id', $basketOwner->id)
             ->join('menus', 'itemable_id', '=', 'menus.id')
             // ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'quantity', 'subtotal')
-            ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'menus.price','quantity', 'subtotal')
+            ->select('cart_items.id', 'menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'menus.price','quantity', 'subtotal')
             ->get();
 
         // $state = 'hello world';
@@ -115,6 +117,13 @@ class MenuController extends Controller
         return view('home', ['baskets' => $baskets], compact('groupedItems'));
 
         // return dd($state);
+    }
+
+    public function destroy(Request $request)
+    {
+        // dd(cartItems::find($request->input("delete-target")));
+        cartItems::destroy($request->input("delete-target"));
+        return redirect()->back();
     }
     
 }

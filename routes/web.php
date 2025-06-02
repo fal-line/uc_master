@@ -13,4 +13,5 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\MenuController::class, 'orderPage'])->name('home');
+    Route::delete('/home', [App\Http\Controllers\MenuController::class, 'destroy']);
 });

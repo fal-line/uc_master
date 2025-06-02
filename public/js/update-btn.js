@@ -5,11 +5,3 @@
 //         $("#commit-button").addClass("btn-success");
 //     });
 // });
-
-$(document).ready(function () {
-    $("#cartModal").modal("toggle");
-
-    $("#refresh").click(function () {
-        location.reload();
-    });
-});

@@ -57,20 +57,27 @@
 
             <div class="modal-body">
                 <hr style="margin: -20px 0 20px 0;">
+                @php $total = 0; @endphp
                   @foreach ($baskets as $index => $rock)
+                      @php $total += $rock->quantity * $rock->price; @endphp
                       <div class="col">
-                        <div class="card text-center shadow-sm" style="width: 18rem;">
+                        <div class="card text-left shadow-sm" >
 
                             <div class="card-body d-flex flex-column justify-content-between">
 
                               <div>
                                   <h6 class="fw-bold">{{ $rock->name }}</h6>
-                                  <p class="text-muted mb-2">Rp.{{ number_format($rock->price, 0, ',', '.') }},00</p>
+                                  Variant : {{ $rock->variant }} | Size : {{ $rock->size }} | Ice : {{ $rock->ice }} | Sugar : {{ $rock->sugar }}
+
+                                  <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp.{{ number_format($rock->price, 0, ',', '.') }}</p>
                               </div>
 
-                              <button id="refresh" class="btn btn-outline-danger" >
-                                  Hapus 
-                              </button>
+                              <form action="/home" method="POST">
+                                  @csrf
+                                  @method('DELETE')
+                                  <input type="hidden" name="delete-target" value="{{$rock->id}}">
+                                  <button id="delete" type="submit" class="btn btn-outline-danger">Hapus</button>
+                              </form>
 
                             </div>
                             
@@ -80,7 +87,7 @@
                 <hr>
                 <div class="d-flex justify-content-between align-items-center fw-bold">
                 <span>Subtotal</span>
-                <span id="subtotal">Rp. 0</span>
+                <span id="subtotal">Rp. {{ number_format($total, 0, ',', '.') }}</span>
                 </div>
             </div>
             </div>
