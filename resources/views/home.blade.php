@@ -7,41 +7,76 @@
   <!-- Top Action Bar -->
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
     <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-success" id="submitOrderBtn" onclick="openSubmitModal()">Submit Order</button>
+      <button class="btn btn-success  btn-lg" id="submitOrderBtn" onclick="openSubmitModal()">Submit Order</button>
       <!-- <span class="fw-bold">Add Order +</span> -->
     </div>
     <div class="d-flex align-items-center gap-4 me-4">
       <label class="fw-bold mb-0">Table:</label>
       <input type="text" class="form-control form-control" style="width: 8rem;">
       <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cartModal">Cart <i class="bi bi-cart"></i></button>      
+       <!-- <button id="openCart-btn" class="btn btn-outline-warning btn-lg" >
+          Cart 
+       </button> -->
+
     </div>
   </div>
   
     <!-- Cart Modal -->
-    <div class="modal fade" id="cartModal" tabindex="-1" aria-hidden="true">
+
+    <!-- <div  id="cartModal" class="modal" style="display:none">
+      <div class="modal-dialog">
+
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Modal title</h5>
+            <button id="close-cartModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <p>Modal body text goes here.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+
+      </div>
+    </div> -->
+
+    <div class="modal" id="cartModal" tabindex="-1" aria-hidden="true">
+
         <div class="modal-dialog modal-dialog-centered modal-lg">
+
             <div class="modal-content p-4 rounded-4">
             <div class="modal-header d-flex justify-content-between align-items-start border-0">
+
                 <h4 class="modal-title fw-bold">Cart</h4>
                 <button type="button" class="btn btn-danger rounded-3 px-3 py-1 fw-bold" data-bs-dismiss="modal">X</button>
+
             </div>
+
             <div class="modal-body">
-                <div id="cartList"></div>
-                <!-- Possible Cart Items here -->
-                @foreach ($baskets as $index => $rock)
-                    <div class="col">
-                    <div class="card text-center shadow-sm" style="width: 18rem;">
-                        <!-- <img src="" class="img-box bg-light d-flex justify-content-center align-rocks-center rounded-image-menu" style="height: 200px;" alt="{{ $rock->name }}"> -->
-                        <div class="card-body d-flex flex-column justify-content-between">
-                        <div>
-                            <h6 class="fw-bold">{{ $rock->name }}</h6>
-                            <p class="text-muted mb-2">Rp.{{ number_format($rock->price, 0, ',', '.') }},00</p>
+                <hr style="margin: -20px 0 20px 0;">
+                  @foreach ($baskets as $index => $rock)
+                      <div class="col">
+                        <div class="card text-center shadow-sm" style="width: 18rem;">
+
+                            <div class="card-body d-flex flex-column justify-content-between">
+
+                              <div>
+                                  <h6 class="fw-bold">{{ $rock->name }}</h6>
+                                  <p class="text-muted mb-2">Rp.{{ number_format($rock->price, 0, ',', '.') }},00</p>
+                              </div>
+
+                              <button id="refresh" class="btn btn-outline-danger" >
+                                  Hapus 
+                              </button>
+
+                            </div>
+                            
                         </div>
-                        
-                        </div>
-                    </div>
-                    </div>
-                @endforeach
+                      </div>
+                  @endforeach
                 <hr>
                 <div class="d-flex justify-content-between align-items-center fw-bold">
                 <span>Subtotal</span>
@@ -50,7 +85,7 @@
             </div>
             </div>
         </div>
-    </div>
+      </div>
     <hr>
 
   <!-- Menu Cards -->
@@ -240,4 +275,7 @@
     </div>
   </div>
 </div>
+
+<div id="decor-backdrop" class="modal-backdrop fade show" style="display: none"></div>
+<script src="../js/update-btn.js"></script>
 @endsection

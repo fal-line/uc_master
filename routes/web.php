@@ -10,4 +10,7 @@ Route::get('/', [App\Http\Controllers\MenuController::class, 'index']);
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\MenuController::class, 'orderPage'])->name('home');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [App\Http\Controllers\MenuController::class, 'orderPage'])->name('home');
+});

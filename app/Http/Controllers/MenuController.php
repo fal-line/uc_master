@@ -110,8 +110,11 @@ class MenuController extends Controller
             ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'menus.price','quantity', 'subtotal')
             ->get();
 
+        // $state = 'hello world';
+
         return view('home', ['baskets' => $baskets], compact('groupedItems'));
-        // return dd($baskets);
+
+        // return dd($state);
     }
     
 }
