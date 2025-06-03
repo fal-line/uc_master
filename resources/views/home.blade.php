@@ -13,7 +13,7 @@
     <div class="d-flex align-items-center gap-4 me-4">
       <label class="fw-bold mb-0">Table:</label>
       <input type="text" class="form-control form-control" style="width: 8rem;">
-      <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#cartModal">Cart <i class="bi bi-cart"></i></button>      
+      <button class="btn btn-outline-warning btn-lg" data-bs-toggle="modal" data-bs-target="#cartModal">Cart <i class="bi bi-cart"></i></button>      
        <!-- <button id="openCart-btn" class="btn btn-outline-warning btn-lg" >
           Cart 
        </button> -->
@@ -69,7 +69,7 @@
                                   <h4 class="fw-bold">{{ $rock->name }}</h4>
                                   Variant : {{ $rock->variant }} | Size : {{ $rock->size }} | Ice : {{ $rock->ice }} | Sugar : {{ $rock->sugar }}
 
-                                  <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp.{{ number_format($rock->price, 0, ',', '.') }}</p>
+                                  <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp{{ number_format($rock->price, 0, ',', '.') }}</p>
                               </div>
 
                               <form action="/home" method="POST">
@@ -87,7 +87,7 @@
                 <hr>
                 <div class="d-flex justify-content-between align-items-center fw-bold">
                 <span>Subtotal</span>
-                <span id="subtotal">Rp. {{ number_format($total, 0, ',', '.') }}</span>
+                <span id="subtotal">Rp{{ number_format($total, 0, ',', '.') }}</span>
                 </div>
             </div>
             </div>
@@ -96,25 +96,149 @@
     <hr>
 
   <!-- Menu Cards -->
+
+  
   @foreach ($groupedItems as $category => $items)
     <h2 class="fw-bold mb-3">{{ $category }}</h2>
     <div class="row row-cols-md-4 g-3  mb-5">
         @foreach ($items as $index => $item)
         <div class="col">
-          <div class="card text-center shadow-sm" style="width: 18rem;">
-            <img src="{{ $item->img_url }}" class="img-box bg-light d-flex justify-content-center align-items-center rounded-image-menu" style="height: 200px;" alt="{{ $item->name }}">
-            <div class="card-body d-flex flex-column justify-content-between">
-              <div>
-                <h6 class="fw-bold">{{ $item->name }}</h6>
-                <p class="text-muted mb-2">Rp.{{ number_format($item->price, 0, ',', '.') }},00</p>
-              </div>
-              
-                <!-- //i close project here, to sleep and as reminder -->
-                <!-- //NEXT STEP IS BUILDING CART CRUD AND PUSH TO OrderedItems & Order :) -->
+            <a   data-bs-toggle="modal"data-bs-target="#drinkDetailModal{{ $item->name }}" >
 
+          <div class="card text-center shadow-sm rounded-image-menu" style="width: 18rem;">
+              <img src="{{ $item->img_url }}" class="img-box bg-light d-flex justify-content-center align-items-center rounded-image-menu" style="height: 200px;" alt="{{ $item->name }}">
+              <div class="card-body d-flex flex-column justify-content-between border-secondar">
+                <div>
+                  <h5 class="fw-bold">{{ $item->name }}</h5>
+                  <h6 class="text-muted mb-2">Rp{{ number_format($item->price, 0, ',', '.') }}</h6>
+                </div>
+              </div>
+          </div>
+
+            </a>
+        </div>
+
+        
+        <!-- Drink Detail Modal -->
+        <div class="modal" id="drinkDetailModal{{ $item->name }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <form id="drinkDetailForm" class="modal-content p-4 rounded-4">
+              <div class="modal-header border-0">
+                <h4 class="modal-title fw-bold" id="drinkDetailTitle">{{ $item->name }}</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <input type="hidden" name="update" value="{{$item->id}}">
+
+              <div class="modal-body">
+                <label class="fw-bold">Choose Variant</label>
+                <select class="form-select mb-4" name="variant-{{ $item->id }}">
+                  <option value="Hot">Hot</option>
+                  <option value="Cold">Cold</option>
+                </select>
+                
+                <div id="ice-options-{{ $item->id }}" name="ice-options">
+                    <label class="fw-bold">Ice</label>
+                    <div class="row row-cols-2 g-3 mb-2">
+                        <div class="form-check ms-3">
+                            <input class="form-check-input border-dark" type="radio" name="ice" value="Less Ice" id="ice-less-{{ $item->id }}">
+                            <label class="form-check-label" for="ice-less">Less Ice</label>
+                        </div>
+                        <div class="form-check ms-3">
+                            <input class="form-check-input border-dark" type="radio" name="ice" value="Normal Ice" id="ice-normal-{{ $item->id }}" checked>
+                            <label class="form-check-label" for="ice-normal">Normal Ice</label>
+                        </div>
+                    </div>
+                </div>
+
+                <label class="fw-bold">Size</label>
+                <div class="row row-cols-2 g-3 mb-2">
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="size" value="Small" id="size-Small">
+                    <label class="form-check-label" for="size-Small">Small</label>
+                  </div>
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="size" value="Reguler" id="size-reguler" checked>
+                    <label class="form-check-label" for="size-reguler">Regular</label>
+                  </div>
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="size" value="Large" id="size-large">
+                    <label class="form-check-label" for="size-large">Large</label>
+                  </div>
+                </div>
+
+
+                <label class="fw-bold">Sweetness</label>
+                <div class="row row-cols-2 g-3">
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="sugar" value="No Sugar" id="sugar-no">
+                    <label class="form-check-label" for="sugar-no">No Sugar</label>
+                  </div>
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="sugar" value="Less Sugar" id="sugar-less">
+                    <label class="form-check-label" for="sugar-less">Less Sugar</label>
+                  </div>
+                  <div class="form-check ms-3">
+                    <input class="form-check-input border-dark" type="radio" name="sugar" value="Normal Sugar" id="sugar-normal" checked>
+                    <label class="form-check-label" for="sugar-normal">Normal Sugar</label>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer border-0 justify-content-end">
+                <button type="submit" class="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2">
+                  SUBMIT <i class="bi bi-send"></i>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+          <div id="toastSuccess" class="toast align-items-center text-bg-dark border-0" role="alert">
+            <div class="d-flex">
+              <div class="toast-body" id="toast-message">Berhasil</div>
+              <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
             </div>
           </div>
         </div>
+
+        
+        <script>
+
+        $(document).ready(function () {
+            toggleIceOptions();
+
+            $('select[name="variant-{{ $item->id }}"]').on('change', function () {
+                toggleIceOptions();
+            });
+
+            function toggleIceOptions() {
+                let variant = $('select[name="variant-{{ $item->id }}"]').val();
+
+                if (variant === 'Cold') {
+                    $('#ice-options-{{ $item->id }}').show();
+                    $('input[name="ice"]').prop('disabled', false).prop('checked', true);
+                } else {
+                    $('#ice-options-{{ $item->id }}').hide();
+                    $('input[name="ice"]').prop('disabled', true).prop('checked', false);
+                    // Optional: Tambahkan input hidden untuk nilai "null"
+                    if ($('#ice-null-{{ $item->id }}').length === 0) {
+                        $('<input>').attr({
+                            type: 'hidden',
+                            name: 'ice',
+                            value: 'null',
+                            id: 'ice-null'
+                        }).appendTo('form'); // atau lokasi yang sesuai
+                    }
+                }
+
+                // Hapus input hidden jika varian kembali ke Cold
+                if (variant === 'Cold') {
+                    $('#ice-null-{{ $item->id }}').remove();
+                }
+            }
+        });
+
+        </script>
+
       @endforeach
     </div>
     <hr>
@@ -147,84 +271,6 @@
   </div>
 </div>
 
-
-<!-- Drink Detail Modal -->
-<div class="modal fade" id="drinkDetailModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
-    <form id="drinkDetailForm" class="modal-content p-4 rounded-4">
-      <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold" id="drinkDetailTitle"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <label class="fw-bold">Choose Variant</label>
-        <select class="form-select mb-4" name="variant">
-          <option value="Cold">Cold</option>
-          <option value="Hot">Hot</option>
-        </select>
-
-        <label class="fw-bold">Size</label>
-        <div class="row row-cols-2 g-3 mb-2">
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="size" value="Small" id="size-Small">
-            <label class="form-check-label" for="size-Small">Small</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="size" value="Reguler" id="size-reguler" checked>
-            <label class="form-check-label" for="size-reguler">Regular</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="size" value="Large" id="size-large">
-            <label class="form-check-label" for="size-large">Large</label>
-          </div>
-        </div>
-
-        <div id="ice-options">
-            <label class="fw-bold">Ice</label>
-            <div class="row row-cols-2 g-3 mb-2">
-                <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="ice" value="Less Ice" id="ice-less">
-                    <label class="form-check-label" for="ice-less">Less Ice</label>
-                </div>
-                <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="ice" value="Normal Ice" id="ice-normal" checked>
-                    <label class="form-check-label" for="ice-normal">Normal Ice</label>
-                </div>
-            </div>
-        </div>
-
-        <label class="fw-bold">Sweetness</label>
-        <div class="row row-cols-2 g-3">
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="sugar" value="No Sugar" id="sugar-no">
-            <label class="form-check-label" for="sugar-no">No Sugar</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="sugar" value="Less Sugar" id="sugar-less">
-            <label class="form-check-label" for="sugar-less">Less Sugar</label>
-          </div>
-          <div class="form-check ms-3">
-            <input class="form-check-input border-dark" type="radio" name="sugar" value="Normal Sugar" id="sugar-normal" checked>
-            <label class="form-check-label" for="sugar-normal">Normal Sugar</label>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer border-0 justify-content-end">
-        <button type="submit" class="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2">
-          SUBMIT <i class="bi bi-send"></i>
-        </button>
-      </div>
-    </form>
-  </div>
-</div>
-<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
-  <div id="toastSuccess" class="toast align-items-center text-bg-dark border-0" role="alert">
-    <div class="d-flex">
-      <div class="toast-body" id="toast-message">Berhasil</div>
-      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
-    </div>
-  </div>
-</div>
 
 <!-- Modal Payment Method -->
 <div class="modal fade" id="paymentMethodModal" tabindex="-1" aria-labelledby="paymentMethodModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -285,4 +331,5 @@
 
 <div id="decor-backdrop" class="modal-backdrop fade show" style="display: none"></div>
 <script src="../js/update-btn.js"></script>
+
 @endsection

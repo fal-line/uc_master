@@ -19,19 +19,18 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId($cartForeignName)->constrained($cartTableName)->cascadeOnDelete();
-            $table->morphs('itemable'); // itemable_id & itemable_type
+            // $table->morphs('itemable'); // itemable_id & itemable_type
+            $table->foreignId('menu_id')->references('id')->on('menus')->onDelete('cascade');
 
             $table->unsignedInteger('quantity')->default(1);
-            $table->unsignedInteger('price'); // harga satuan
-            $table->unsignedInteger('subtotal')->nullable(); // harga total (qty * price)
 
             // Tambahan atribut khusus untuk POS
             $table->string('variant')->nullable();
             $table->string('size')->nullable();
             $table->string('ice')->nullable();
             $table->string('sugar')->nullable();
-
-            $table->json('options')->nullable(); // bisa tetap dipakai untuk fleksibilitas
+            // harga total (qty * price)
+            $table->unsignedInteger('subtotal')->nullable(); 
 
             $table->timestamps();
         });
@@ -43,7 +42,9 @@ return new class extends Migration
     public function down(): void
     {
         $table = config('laravel-cart.cart_items.table', 'cart_items');
-
+        
+        $table->dropForeign('menu');
+        $table->foreign('menu')->references('id')->on('menus');
         Schema::dropIfExists($table);
     }
 };

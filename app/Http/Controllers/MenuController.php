@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Menu;
 use App\Models\cartItems;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class MenuController extends Controller
 {
@@ -93,7 +95,7 @@ class MenuController extends Controller
         // Duplicate for layout preview
         // $menuItems = array_merge($menuItems);
         $menuItems = DB::table('menus')
-            ->select('name', 'description', 'category', 'price', 'most_ordered', 'img_url')
+            ->select('id', 'name', 'description', 'category', 'price', 'most_ordered', 'img_url')
             ->get();
 
         $groupedItems = collect($menuItems)->groupBy('category');
@@ -102,21 +104,30 @@ class MenuController extends Controller
             ->where('user_id', Auth::id())
             ->latest() // ambil yang paling baru
             ->first();
+
+        if ($basketOwner == null) {
+            DB::table('carts')->insert(
+            array(
+                'user_id' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            )
+        );
+        }
             
         // $pass = collect($basketOwner);s
 
         $baskets = DB::table('cart_items')
             ->where('cart_id', $basketOwner->id)
-            ->join('menus', 'itemable_id', '=', 'menus.id')
-            // ->select('menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'quantity', 'subtotal')
-            ->select('cart_items.id', 'menus.name', 'menus.description', 'variant', 'size', 'ice', 'sugar', 'menus.price','quantity', 'subtotal')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->select('cart_items.id', 'cart_id', 'menu_id', 'menus.name', 'menus.description', 'menus.price', 'quantity', 'variant', 'size', 'ice', 'sugar', 'subtotal')
             ->get();
 
         // $state = 'hello world';
 
-        return view('home', ['baskets' => $baskets], compact('groupedItems'));
+        // return view('home', ['baskets' => $baskets], compact('groupedItems'));
 
-        // return dd($state);
+        return dd($basketOwner, $baskets);;
     }
 
     public function destroy(Request $request)
@@ -124,6 +135,23 @@ class MenuController extends Controller
         // dd(cartItems::find($request->input("delete-target")));
         cartItems::destroy($request->input("delete-target"));
         return redirect()->back();
+    }
+
+    public function store(Request $request)
+    {
+        // dd(cartItems::find($request->input("delete-target")));
+        DB::table('cart_items')
+            ->sum()
+            ->firstOrCreate(
+                [ 
+                    //field => req->value
+                    'menu_id' => $request->input("update"), 
+                    'variant' => $request->input("name_"), 
+                    'size' => $request->input("name_"), 
+                    'ice' => $request->input("name_"), 
+                    'sugar' => $request->input("name_")
+                ]
+            )->increment('quantity');
     }
     
 }
