@@ -145,7 +145,9 @@ class MenuController extends Controller
             ->firstOrCreate(
                 [ 
                     //field => req->value
-                    'menu_id' => $request->input("update"), 
+                    // TODO $ANCHOR BASED ON DATA SENT, NEED TO FIGURE
+                    // THE $REQUEST WAS FROM WHAT FORM BASED ON FOREACH.
+                    'menu_id' => $request->input("update_",$anchor), 
                     'variant' => $request->input("name_"), 
                     'size' => $request->input("name_"), 
                     'ice' => $request->input("name_"), 
