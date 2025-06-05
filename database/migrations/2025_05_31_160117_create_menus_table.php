@@ -30,7 +30,7 @@ return new class extends Migration
             'category'=> 'Coffee',
             'price' => '13500',
             'most_ordered'=> false,
-            'img_url' => 'img/coffee_placeholder.png',
+            'img_url' => 'img/item_placeholder.png',
             )
         );
 
@@ -41,7 +41,7 @@ return new class extends Migration
             'category'=> 'Coffee',
             'price' => '15000',
             'most_ordered'=> true,
-            'img_url' => 'img/coffee_placeholder.png',
+            'img_url' => 'img/item_placeholder.png',
             )
         );
         
@@ -52,7 +52,7 @@ return new class extends Migration
             'category'=> 'Snack',
             'price' => '28000',
             'most_ordered'=> true,
-            'img_url' => 'img/coffee_placeholder.png',
+            'img_url' => 'img/item_placeholder.png',
             )
         );
 
@@ -63,7 +63,7 @@ return new class extends Migration
             'category'=> 'Snack',
             'price' => '22000',
             'most_ordered'=> false,
-            'img_url' => 'img/coffee_placeholder.png',
+            'img_url' => 'img/item_placeholder.png',
             )
         );
         

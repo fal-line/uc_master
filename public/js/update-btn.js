@@ -45,42 +45,42 @@
 //     }
 // });
 
-$(document).ready(function () {
-    toggleIceOptions();
+// $(document).ready(function () {
+//     toggleIceOptions();
 
-    $('select[name="variant"]').on("change", function () {
-        toggleIceOptions();
-    });
+//     $('select[name="variant"]').on("change", function () {
+//         toggleIceOptions();
+//     });
 
-    function toggleIceOptions() {
-        let variant = $('select[name="variant"]').val();
+//     function toggleIceOptions() {
+//         let variant = $('select[name="variant"]').val();
 
-        if (variant === "Cold") {
-            $('[name="ice-option"]').show(); // ubah ke class atau name sesuai wrapper
-            $('input[name="ice"]').prop("disabled", false);
-            $('input[name="ice"][value="Normal Ice"]').prop("checked", true);
+//         if (variant === "Cold") {
+//             $('[name="ice-option"]').show(); // ubah ke class atau name sesuai wrapper
+//             $('input[name="ice"]').prop("disabled", false);
+//             $('input[name="ice"][value="Normal Ice"]').prop("checked", true);
 
-            // Hapus hidden input "null"
-            $('input[type="hidden"][name="ice"][value="null"]').remove();
-        } else {
-            $('input[name="ice"]')
-                .prop("disabled", true)
-                .prop("checked", false);
+//             // Hapus hidden input "null"
+//             $('input[type="hidden"][name="ice"][value="null"]').remove();
+//         } else {
+//             $('input[name="ice"]')
+//                 .prop("disabled", true)
+//                 .prop("checked", false);
 
-            $('[name="ice-option"]').hide(); // ubah ke class atau name sesuai wrapper
+//             $('[name="ice-option"]').hide(); // ubah ke class atau name sesuai wrapper
 
-            // Tambahkan hidden input hanya jika belum ada
-            if (
-                $('input[type="hidden"][name="ice"][value="null"]').length === 0
-            ) {
-                $("<input>")
-                    .attr({
-                        type: "hidden",
-                        name: "ice",
-                        value: "null",
-                    })
-                    .appendTo("form"); // atau append ke container yang sesuai
-            }
-        }
-    }
-});
+//             // Tambahkan hidden input hanya jika belum ada
+//             if (
+//                 $('input[type="hidden"][name="ice"][value="null"]').length === 0
+//             ) {
+//                 $("<input>")
+//                     .attr({
+//                         type: "hidden",
+//                         name: "ice",
+//                         value: "null",
+//                     })
+//                     .appendTo("form"); // atau append ke container yang sesuai
+//             }
+//         }
+//     }
+// });

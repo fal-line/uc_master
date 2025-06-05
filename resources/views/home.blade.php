@@ -67,7 +67,10 @@
 
                               <div>
                                   <h4 class="fw-bold">{{ $rock->name }}</h4>
-                                  Variant : {{ $rock->variant }} | Size : {{ $rock->size }} | Ice : {{ $rock->ice }} | Sugar : {{ $rock->sugar }}
+                                  Variant : <strong>{{ $rock->variant }}</strong> 
+                                  | Size : <strong>{{ $rock->size }}</strong> 
+                                  | Ice : <strong>{{ $rock->ice }}</strong> 
+                                  | Sugar : <strong>{{ $rock->sugar }}</strong>
 
                                   <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp{{ number_format($rock->price, 0, ',', '.') }}</p>
                               </div>
@@ -86,8 +89,8 @@
                   @endforeach
                 <hr>
                 <div class="d-flex justify-content-between align-items-center fw-bold">
-                <span>Subtotal</span>
-                <span id="subtotal">Rp{{ number_format($total, 0, ',', '.') }}</span>
+                <h4>Subtotal</h4>
+                <h4 id="subtotal">Rp{{ number_format($total, 0, ',', '.') }}</h4>
                 </div>
             </div>
             </div>
@@ -122,12 +125,14 @@
         <!-- Drink Detail Modal -->
         <div class="modal" id="drinkDetailModal{{ $item->name }}" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
-            <form id="drinkDetailForm" class="modal-content p-4 rounded-4">
+            <form id="drinkDetailForm" class="modal-content p-4 rounded-4" method="POST" action="/home/store">
+              @CSRF
               <div class="modal-header border-0">
                 <h4 class="modal-title fw-bold" id="drinkDetailTitle">{{ $item->name }}</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
-              <input type="hidden" name="update" value="{{$item->id}}">
+              <input type="hidden" name="update_{{$item->id}}" value="{{$item->id}}">
+              <!-- <input type="hidden" name="anchor" value="{{$item->id}}"> -->
 
               <div class="modal-body">
                 <label class="fw-bold">Choose Variant</label>
@@ -136,15 +141,19 @@
                   <option value="Cold">Cold</option>
                 </select>
                 
-                <div id="ice-options-{{ $item->id }}" name="ice-options">
+                <div id="ice-options-{{ $item->id }}" name="ice-name-{{$item->id}}">
                     <label class="fw-bold">Ice</label>
                     <div class="row row-cols-2 g-3 mb-2">
                         <div class="form-check ms-3">
-                            <input class="form-check-input border-dark" type="radio" name="ice" value="Less Ice" id="ice-less-{{ $item->id }}">
+                            <input class="form-check-input border-dark" type="radio" name="ice-{{$item->id}}" value="No Ice" id="ice-no-{{ $item->id }}">
+                            <label class="form-check-label" for="ice-no">No Ice</label>
+                        </div>
+                        <div class="form-check ms-3">
+                            <input class="form-check-input border-dark" type="radio" name="ice-{{$item->id}}" value="Less Ice" id="ice-less-{{ $item->id }}">
                             <label class="form-check-label" for="ice-less">Less Ice</label>
                         </div>
                         <div class="form-check ms-3">
-                            <input class="form-check-input border-dark" type="radio" name="ice" value="Normal Ice" id="ice-normal-{{ $item->id }}" checked>
+                            <input class="form-check-input border-dark" type="radio" name="ice-{{$item->id}}" value="Normal Ice" id="ice-normal-{{ $item->id }}">
                             <label class="form-check-label" for="ice-normal">Normal Ice</label>
                         </div>
                     </div>
@@ -153,15 +162,15 @@
                 <label class="fw-bold">Size</label>
                 <div class="row row-cols-2 g-3 mb-2">
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="size" value="Small" id="size-Small">
+                    <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Small" id="size-Small">
                     <label class="form-check-label" for="size-Small">Small</label>
                   </div>
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="size" value="Reguler" id="size-reguler" checked>
+                    <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Reguler" id="size-reguler" checked>
                     <label class="form-check-label" for="size-reguler">Regular</label>
                   </div>
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="size" value="Large" id="size-large">
+                    <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Large" id="size-large">
                     <label class="form-check-label" for="size-large">Large</label>
                   </div>
                 </div>
@@ -170,15 +179,15 @@
                 <label class="fw-bold">Sweetness</label>
                 <div class="row row-cols-2 g-3">
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="sugar" value="No Sugar" id="sugar-no">
+                    <input class="form-check-input border-dark" type="radio" name="sugar-{{$item->id}}" value="No Sugar" id="sugar-no">
                     <label class="form-check-label" for="sugar-no">No Sugar</label>
                   </div>
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="sugar" value="Less Sugar" id="sugar-less">
+                    <input class="form-check-input border-dark" type="radio" name="sugar-{{$item->id}}" value="Less Sugar" id="sugar-less">
                     <label class="form-check-label" for="sugar-less">Less Sugar</label>
                   </div>
                   <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="sugar" value="Normal Sugar" id="sugar-normal" checked>
+                    <input class="form-check-input border-dark" type="radio" name="sugar-{{$item->id}}" value="Normal Sugar" id="sugar-normal" checked>
                     <label class="form-check-label" for="sugar-normal">Normal Sugar</label>
                   </div>
                 </div>
@@ -215,24 +224,18 @@
 
                 if (variant === 'Cold') {
                     $('#ice-options-{{ $item->id }}').show();
-                    $('input[name="ice"]').prop('disabled', false).prop('checked', true);
+                    $('#ice-normal-{{ $item->id }}').prop('checked');
                 } else {
-                    $('#ice-options-{{ $item->id }}').hide();
-                    $('input[name="ice"]').prop('disabled', true).prop('checked', false);
-                    // Optional: Tambahkan input hidden untuk nilai "null"
-                    if ($('#ice-null-{{ $item->id }}').length === 0) {
-                        $('<input>').attr({
-                            type: 'hidden',
-                            name: 'ice',
-                            value: 'null',
-                            id: 'ice-null'
-                        }).appendTo('form'); // atau lokasi yang sesuai
-                    }
-                }
+                    $(`#ice-options-{{ $item->id }}`).hide();
+                    
+                    // Disable semua radio input ice
+                    $('#ice-normal-{{ $item->id }}').removeProp('checked');
 
-                // Hapus input hidden jika varian kembali ke Cold
-                if (variant === 'Cold') {
-                    $('#ice-null-{{ $item->id }}').remove();
+                    // Aktifkan hanya "No Ice"
+                    $(`#ice-no-{{ $item->id }}`).prop('checked');
+
+                    // Hapus input hidden jika ada
+                    // $(`#ice-null-{{ $item->id }}`).remove();
                 }
             }
         });

@@ -40,60 +40,7 @@ class MenuController extends Controller
 
     public function orderPage()
     {
-        // $menuItems = [
-        //     [
-        //         'id' => 1,
-        //         'name' => 'Caffee Latte',
-        //         'category' => 'Coffee',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 2,
-        //         'name' => 'Espresso',
-        //         'category' => 'Coffee',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 3,
-        //         'name' => 'Moccachino',
-        //         'category' => 'Coffee',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 4,
-        //         'name' => 'Caffee Latte',
-        //         'category' => 'Coffee',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 5,
-        //         'name' => 'Caffee Latte',
-        //         'category' => 'Drinks',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 6,
-        //         'name' => 'Caffee Latte',
-        //         'category' => 'Coffee',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ],
-        //     [
-        //         'id' => 11,
-        //         'name' => 'Friench Fries',
-        //         'category' => 'Snack',
-        //         'price' => 22000,
-        //         'image' => 'img/item_placeholder.png'
-        //     ]
-        // ];
 
-        // Duplicate for layout preview
-        // $menuItems = array_merge($menuItems);
         $menuItems = DB::table('menus')
             ->select('id', 'name', 'description', 'category', 'price', 'most_ordered', 'img_url')
             ->get();
@@ -113,6 +60,9 @@ class MenuController extends Controller
                 'updated_at' => now(),
             )
         );
+        
+        return redirect('home');
+        
         }
             
         // $pass = collect($basketOwner);s
@@ -125,9 +75,9 @@ class MenuController extends Controller
 
         // $state = 'hello world';
 
-        // return view('home', ['baskets' => $baskets], compact('groupedItems'));
+        return view('home', ['baskets' => $baskets], compact('groupedItems'));
 
-        return dd($basketOwner, $baskets);;
+        // return dd($basketOwner, $baskets);;
     }
 
     public function destroy(Request $request)
@@ -140,20 +90,98 @@ class MenuController extends Controller
     public function store(Request $request)
     {
         // dd(cartItems::find($request->input("delete-target")));
-        DB::table('cart_items')
-            ->sum()
-            ->firstOrCreate(
-                [ 
-                    //field => req->value
-                    // TODO $ANCHOR BASED ON DATA SENT, NEED TO FIGURE
-                    // THE $REQUEST WAS FROM WHAT FORM BASED ON FOREACH.
-                    'menu_id' => $request->input("update_",$anchor), 
-                    'variant' => $request->input("name_"), 
-                    'size' => $request->input("name_"), 
-                    'ice' => $request->input("name_"), 
-                    'sugar' => $request->input("name_")
-                ]
-            )->increment('quantity');
+        
+        $anchor = array_values($request->all());
+        $anchor = $anchor[1];
+
+        // if ($request->input("ice_") . $anchor == null) {
+            
+        //     return dd($anchor, $request);
+        // }
+
+
+        
+        // return dd($anchor, $request);
+        
+        // DB::insert('insert into cart_items (id, boardOwner, itemName, itemDesc, itemPrice, created_at, updated_at, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [NULL, $request->route('id'), '', '', NULL, NULL, NULL, 'unchecked']);
+        
+
+        $basketOwner = DB::table('carts')
+            ->where('user_id', Auth::id())
+            ->latest() // ambil yang paling baru
+            ->first();
+
+        $cartItem = DB::table('cart_items')
+            ->where('cart_id', $basketOwner->id)
+            ->where('menu_id', $request->input("update_" . $anchor))
+            ->where('variant', $request->input("variant-" . $anchor))
+            ->where('size', $request->input("size-" . $anchor))
+            ->where('ice', $request->input('ice-' . $anchor) === 'null' ? 'No Ice' : $request->input('ice-' . $anchor))
+            ->where('sugar', $request->input("sugar-" . $anchor))
+            ->first();
+            
+        // return dd($cartItem->id, $request);
+
+        if ($cartItem) {
+            DB::table('cart_items')
+                ->where('id', $cartItem->id)
+                ->increment('quantity');
+        } else {
+            DB::table('cart_items')->insert([
+                'cart_id'  => $basketOwner->id,
+                'menu_id'  => $request->input("update_" . $anchor),
+                'variant'  => $request->input("variant-" . $anchor),
+                'size'     => $request->input("size-" . $anchor),
+                'ice'      => $request->input('ice-' . $anchor) === 'null' ? 'No Ice' : $request->input('ice-' . $anchor),
+                'sugar'    => $request->input("sugar-" . $anchor),
+                'quantity' => 1,
+            ]);
+        }
+
+        $cartItem = DB::table('cart_items')
+            ->where('cart_id', $basketOwner->id)
+            ->where('menu_id', $request->input("update_" . $anchor))
+            ->where('variant', $request->input("variant-" . $anchor))
+            ->where('size', $request->input("size-" . $anchor))
+            ->where('ice', $request->input("ice-" . $anchor))
+            ->where('sugar', $request->input("sugar-" . $anchor))
+            ->first();
+
+        $iceOrNo = DB::table('cart_items')
+            ->where('cart_id', $basketOwner->id)
+            ->where('ice', $request->input("ice-" . $anchor))
+            ->first();
+
+        if ($iceOrNo === null) {    
+            // DB::insert('insert into cart_items (ice) values (?)', ['No Ice']);
+            DB::table('cart_items')
+                ->where('id', $cartItem->id)
+                ->insert([
+                'ice'      => 'No Ice',
+            ]);
+        }
+        
+        // return dd($iceOrNo->ice, $cartItem->id, $request);
+        // DB::table('cart_items')
+
+        //     // ->sum()
+        //     ->updateOrInsert(
+        //         [ 
+        //             //field => req->value
+        //             // TODO $ANCHOR BASED ON DATA SENT, NEED TO FIGURE
+        //             // THE $REQUEST WAS FROM WHAT FORM BASED ON FOREACH.
+        //             'menu_id' => $request->input("update_".$anchor), 
+        //             'variant' => $request->input("variant-".$anchor), 
+        //             'size' => $request->input("size-".$anchor), 
+        //             'ice' => $request->input("ice-options-".$anchor), 
+        //             'sugar' => $request->input("sugar-".$anchor)
+        //         ]
+        //     )->increment('quantity');
+
+        
+        // return dd($cartItem, $request);
+            
+        return redirect('home');
     }
     
 }
