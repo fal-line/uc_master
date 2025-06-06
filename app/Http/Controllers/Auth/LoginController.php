@@ -25,8 +25,14 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        if (auth()->user()->role === 'admin') {
+            return '/dashboard';
+        }
 
+        return '/home'; // default redirect untuk selain admin
+    }
     /**
      * Create a new controller instance.
      *
