@@ -4,6 +4,14 @@
 <!-- Main Content -->
 <main class="container py-4">
 
+@if(session()->has('lastAct'))
+    <script>
+        $(document).ready(function () {
+          $('#cartModal').modal('show')
+        });
+    </script>
+@endif
+
   <!-- Top Action Bar -->
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
     <div class="d-flex align-items-center gap-3">
@@ -153,7 +161,7 @@
                             <label class="form-check-label" for="ice-less">Less Ice</label>
                         </div>
                         <div class="form-check ms-3">
-                            <input class="form-check-input border-dark" type="radio" name="ice-{{$item->id}}" value="Normal Ice" id="ice-normal-{{ $item->id }}">
+                            <input class="form-check-input border-dark" type="radio" name="ice-{{$item->id}}" value="Normal Ice" id="ice-normal-{{ $item->id }}" checked>
                             <label class="form-check-label" for="ice-normal">Normal Ice</label>
                         </div>
                     </div>
@@ -213,31 +221,31 @@
         <script>
 
         $(document).ready(function () {
-            toggleIceOptions();
-
-            $('select[name="variant-{{ $item->id }}"]').on('change', function () {
-                toggleIceOptions();
-            });
 
             function toggleIceOptions() {
                 let variant = $('select[name="variant-{{ $item->id }}"]').val();
 
                 if (variant === 'Cold') {
                     $('#ice-options-{{ $item->id }}').show();
-                    $('#ice-normal-{{ $item->id }}').prop('checked');
+                    $('#ice-less-{{ $item->id }}').val("Less Ice");
+                    $('#ice-normal-{{ $item->id }}').val("Normal Ice");
+                    // $('#ice-normal-{{ $item->id }}').prop('checked');
                 } else {
                     $(`#ice-options-{{ $item->id }}`).hide();
                     
-                    // Disable semua radio input ice
-                    $('#ice-normal-{{ $item->id }}').removeProp('checked');
-
-                    // Aktifkan hanya "No Ice"
-                    $(`#ice-no-{{ $item->id }}`).prop('checked');
+                    $('#ice-less-{{ $item->id }}').val("No Ice");
+                    $('#ice-normal-{{ $item->id }}').val("No Ice");
 
                     // Hapus input hidden jika ada
                     // $(`#ice-null-{{ $item->id }}`).remove();
                 }
             }
+
+            toggleIceOptions();
+            
+            $('select[name="variant-{{ $item->id }}"]').on('change', function () {
+                toggleIceOptions();
+            });
         });
 
         </script>

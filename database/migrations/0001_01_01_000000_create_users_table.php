@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->enum('role', ['admin', 'crew','cashier']);
+            $table->string('phone', 13)->unique();
+            $table->string('address', 300)->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
@@ -40,6 +43,9 @@ return new class extends Migration
             array(
             'name' => 'admin-service',
             'email' => 'test@test',
+            'role' => 'admin',
+            'phone' => '087899996666',
+            'address' => 'Jl.Jauh 6969',
             'password' => $password = Hash::make('123')
             )
         );

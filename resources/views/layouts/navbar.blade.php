@@ -17,20 +17,28 @@
 
 </style>
 <nav class="navbar navbar-expand-lg shadow-sm">
+
     <div class="container">
+
       <a href="{{ url('/') }}" class="navbar-brand">
         <div class="navbar-brand text-white">
             <strong>Underground<br>Cafe</strong>
         </div>
         <!-- <img src="{{ asset('img/logo-with-name-black.png') }}" alt="Web Banking Hero Image" class="img-fluid" style="height: 40px;"> -->
       </a>
+
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav ms-auto">
+
+        
+
           <!-- Authentication Links -->
           @guest
+          
               @if (Route::has('login'))
                   <li class="nav-item">
                       <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -50,14 +58,14 @@
                   </a>
                   <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                       
-                    @if (Auth::user()->role == 1)
+                    <!-- @if (Auth::user()->role == 1)
                         <a class="dropdown-item" href="{{ route('dashboard') }}">
                             {{ __('Dashboard') }}
                         </a>
                     @endif
                     @if (Auth::user()->role == 2)
                         <a href="#" class="btn btn-secondary dropdown-item">Add Order</a>
-                    @endif
+                    @endif -->
                       <a class="dropdown-item" href="{{ route('logout') }}"
                          onclick="event.preventDefault();
                                        document.getElementById('logout-form').submit();">
@@ -70,7 +78,9 @@
                   </div>
               </li>
           @endguest
+
         </ul>
-      </div>
+      
     </div>
+
 </nav>

@@ -84,7 +84,8 @@ class MenuController extends Controller
     {
         // dd(cartItems::find($request->input("delete-target")));
         cartItems::destroy($request->input("delete-target"));
-        return redirect()->back();
+        // $lastAct = $request->_method;
+        return redirect('home')->with('lastAct', 'tes');
     }
 
     public function store(Request $request)
@@ -116,7 +117,7 @@ class MenuController extends Controller
             ->where('menu_id', $request->input("update_" . $anchor))
             ->where('variant', $request->input("variant-" . $anchor))
             ->where('size', $request->input("size-" . $anchor))
-            ->where('ice', $request->input('ice-' . $anchor) === 'null' ? 'No Ice' : $request->input('ice-' . $anchor))
+            ->where('ice', $request->input('ice-' . $anchor))
             ->where('sugar', $request->input("sugar-" . $anchor))
             ->first();
             
@@ -132,52 +133,11 @@ class MenuController extends Controller
                 'menu_id'  => $request->input("update_" . $anchor),
                 'variant'  => $request->input("variant-" . $anchor),
                 'size'     => $request->input("size-" . $anchor),
-                'ice'      => $request->input('ice-' . $anchor) === 'null' ? 'No Ice' : $request->input('ice-' . $anchor),
+                'ice'      => $request->input('ice-' . $anchor),
                 'sugar'    => $request->input("sugar-" . $anchor),
                 'quantity' => 1,
             ]);
         }
-
-        $cartItem = DB::table('cart_items')
-            ->where('cart_id', $basketOwner->id)
-            ->where('menu_id', $request->input("update_" . $anchor))
-            ->where('variant', $request->input("variant-" . $anchor))
-            ->where('size', $request->input("size-" . $anchor))
-            ->where('ice', $request->input("ice-" . $anchor))
-            ->where('sugar', $request->input("sugar-" . $anchor))
-            ->first();
-
-        $iceOrNo = DB::table('cart_items')
-            ->where('cart_id', $basketOwner->id)
-            ->where('ice', $request->input("ice-" . $anchor))
-            ->first();
-
-        if ($iceOrNo === null) {    
-            // DB::insert('insert into cart_items (ice) values (?)', ['No Ice']);
-            DB::table('cart_items')
-                ->where('id', $cartItem->id)
-                ->insert([
-                'ice'      => 'No Ice',
-            ]);
-        }
-        
-        // return dd($iceOrNo->ice, $cartItem->id, $request);
-        // DB::table('cart_items')
-
-        //     // ->sum()
-        //     ->updateOrInsert(
-        //         [ 
-        //             //field => req->value
-        //             // TODO $ANCHOR BASED ON DATA SENT, NEED TO FIGURE
-        //             // THE $REQUEST WAS FROM WHAT FORM BASED ON FOREACH.
-        //             'menu_id' => $request->input("update_".$anchor), 
-        //             'variant' => $request->input("variant-".$anchor), 
-        //             'size' => $request->input("size-".$anchor), 
-        //             'ice' => $request->input("ice-options-".$anchor), 
-        //             'sugar' => $request->input("sugar-".$anchor)
-        //         ]
-        //     )->increment('quantity');
-
         
         // return dd($cartItem, $request);
             
