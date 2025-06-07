@@ -18,24 +18,10 @@ class MenuController extends Controller
             ->select('name', 'description', 'category', 'price', 'most_ordered', 'img_url')
             ->get();
             
-        
-        // $menuItems = [
-        //     [
-        //         'name' => 'Friench Fries',
-        //         'description' => 'Crispy golden fries served with sauce.',
-        //         'category' => 'Snack',
-        //         'price' => 22000,
-        //         'most_ordered' => true,
-        //         'image' => 'img/coffee_placeholder.png'
-        //     ],
-        // ];
-
         // Group by category manually
         $grouped = collect($menuItems)->groupBy('category');
 
         return view('welcome', ['menuItems' => $grouped]);
-        // $menuItems = MenuItem::all()->groupBy('category');
-        // return view('menu.index', compact('menuItems'));
     }
 
     public function orderPage()
@@ -88,24 +74,12 @@ class MenuController extends Controller
         return redirect('home')->with('lastAct', 'tes');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Menu $menu)
     {
         // dd(cartItems::find($request->input("delete-target")));
         
         $anchor = array_values($request->all());
         $anchor = $anchor[1];
-
-        // if ($request->input("ice_") . $anchor == null) {
-            
-        //     return dd($anchor, $request);
-        // }
-
-
-        
-        // return dd($anchor, $request);
-        
-        // DB::insert('insert into cart_items (id, boardOwner, itemName, itemDesc, itemPrice, created_at, updated_at, status) values (?, ?, ?, ?, ?, ?, ?, ?)', [NULL, $request->route('id'), '', '', NULL, NULL, NULL, 'unchecked']);
-        
 
         $basketOwner = DB::table('carts')
             ->where('user_id', Auth::id())
@@ -120,13 +94,23 @@ class MenuController extends Controller
             ->where('ice', $request->input('ice-' . $anchor))
             ->where('sugar', $request->input("sugar-" . $anchor))
             ->first();
-            
-        // return dd($cartItem->id, $request);
+
+
+
+        // return dd($cartItem, $request);
+        
 
         if ($cartItem) {
             DB::table('cart_items')
                 ->where('id', $cartItem->id)
                 ->increment('quantity');
+
+                $stone = DB::table('cart_items')
+                    ->where('menu_id', $request->input("update_" . $anchor))
+                    ->join('menus', 'menu_id', '=', 'menus.id')
+                    ->select('menus.price', 'quantity')
+                    ->get();
+
         } else {
             DB::table('cart_items')->insert([
                 'cart_id'  => $basketOwner->id,
@@ -137,6 +121,8 @@ class MenuController extends Controller
                 'sugar'    => $request->input("sugar-" . $anchor),
                 'quantity' => 1,
             ]);
+
+            
         }
         
         // return dd($cartItem, $request);
