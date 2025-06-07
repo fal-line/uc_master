@@ -34,6 +34,38 @@ return new class extends Migration
 
             $table->timestamps();
         });
+
+         // Trigger BEFORE INSERT
+        DB::unprepared('
+            CREATE TRIGGER calc_subtotal_cart_items_before_insert
+            BEFORE INSERT ON cart_items
+            FOR EACH ROW
+            BEGIN
+                DECLARE menu_price DECIMAL(10,2);
+                SELECT price INTO menu_price
+                FROM menus
+                WHERE id = NEW.menu_id
+                LIMIT 1;
+                
+                SET NEW.subtotal = NEW.quantity * menu_price;
+            END
+        ');
+
+        // Trigger BEFORE UPDATE
+        DB::unprepared('
+            CREATE TRIGGER calc_subtotal_cart_items_before_update
+            BEFORE UPDATE ON cart_items
+            FOR EACH ROW
+            BEGIN
+                DECLARE menu_price DECIMAL(10,2);
+                SELECT price INTO menu_price
+                FROM menus
+                WHERE id = NEW.menu_id
+                LIMIT 1;
+                
+                SET NEW.subtotal = NEW.quantity * menu_price;
+            END
+        ');
     }
 
     /**
@@ -43,8 +75,11 @@ return new class extends Migration
     {
         $table = config('laravel-cart.cart_items.table', 'cart_items');
         
-        $table->dropForeign('menu');
-        $table->foreign('menu')->references('id')->on('menus');
+        $table->dropForeign('menu_id');
+        $table->foreign('menu_id')->references('id')->on('menus');
         Schema::dropIfExists($table);
+        
+        DB::unprepared('DROP TRIGGER IF EXISTS calc_subtotal_cart_items_before_insert');
+        DB::unprepared('DROP TRIGGER IF EXISTS calc_subtotal_cart_items_before_update');
     }
 };
