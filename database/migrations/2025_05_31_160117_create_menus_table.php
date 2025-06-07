@@ -19,6 +19,8 @@ return new class extends Migration
             $table->integer('price');
             $table->boolean('most_ordered');
             $table->string('img_url');
+            $table->timestamp('updated_at')->nullable();
+            $table->timestamp('created_at')->nullable();
         });
 
 
