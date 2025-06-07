@@ -30,15 +30,15 @@
     @foreach ($menuItems as $item)
     <tr>
       <th scope="row" class="align-middle">{{ $item->id }}</th>
-      <td>{{ $item->name }}</td>
-      <td>{{ $item->description }}</td>
-      <td>{{ $item->category }}</td>
-      <td style="align-middle">{{ $item->most_ordered }}</td>
-      <td
+      <td class="align-middle">{{ $item->name }}</td>
+      <td class="align-middle">{{ $item->description }}</td>
+      <td class="align-middle">{{ $item->category }}</td>
+      <td class="align-middle" style="align-middle">{{ $item->most_ordered }}</td>
+      <td class="align-middle"
       ><img class="image-fluid" style="max-width: 150px; max-height:250px;" src="
         ../{{ $item->img_url }}" alt="">
     </td>
-      <td>
+      <td class="align-middle">
         <a href="/dashboard/menu/{{ $item->id }}" class="text-white align-middle">
             <button  class="btn btn-outline-secondary">
                 Modify

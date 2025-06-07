@@ -56,7 +56,7 @@
       <div class="input-group me-4">
         <label class="input-group-text" for="inputGroupSelect01">Menu Category</label>
         <select class="form-select" id="inputGroupSelect01" name="category">
-          <option selected>{{ $item->category }} / Don't change</option>
+          <option selected>{{ $item->category }} / Click to change</option>
           <option value="Coffee">Coffee</option>
           <option value="Non-Coffee">Non-Coffee</option>
           <option value="Snack">Snack</option>
