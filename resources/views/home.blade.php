@@ -114,7 +114,7 @@
     <div class="row row-cols-md-4 g-3  mb-5">
         @foreach ($items as $index => $item)
         <div class="col">
-            <a   data-bs-toggle="modal"data-bs-target="#drinkDetailModal{{ $item->name }}" >
+            <a   data-bs-toggle="modal"data-bs-target="#drinkDetailModal{{ str_replace(' ', '', $item->name ) }}" >
 
           <div class="card text-center shadow-sm rounded-image-menu" style="width: 18rem;">
               <img src="{{ $item->img_url }}" class="img-box bg-light d-flex justify-content-center align-items-center rounded-image-menu" style="height: 200px;" alt="{{ $item->name }}">
@@ -131,7 +131,7 @@
 
         
         <!-- Drink Detail Modal -->
-        <div class="modal" id="drinkDetailModal{{ $item->name }}" tabindex="-1" aria-hidden="true">
+        <div class="modal" id="drinkDetailModal{{ str_replace(' ', '', $item->name ) }}" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
             <form id="drinkDetailForm" class="modal-content p-4 rounded-4" method="POST" action="/home/store">
               @CSRF
