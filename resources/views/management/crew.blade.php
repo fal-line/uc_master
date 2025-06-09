@@ -5,6 +5,9 @@
 <main class="container py-4">
 @include('layouts.goBack')
 
+    <div class="my-3 me-5 d-flex justify-content-start">
+      <h1>Crew Management</h1>
+    </div>
     <div class="my-3 me-5 d-flex justify-content-end">
       <a href="/dashboard/crew/new" class="text-white align-middle">
             <button  class="btn btn-outline-secondary">

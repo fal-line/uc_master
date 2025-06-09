@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\User;
+use App\Exports\OrderExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class AdminController extends Controller
 {
@@ -217,7 +220,89 @@ class AdminController extends Controller
 
     
     // Menu management -------------------------------------------------
+
+    // Order & Ordered Item management -------------------------------------------------
+
+    public function indexOrder()
+    {
+        
+
+// // table ordered_items
+//     id
+//     order_id
+//     menu_id
+//     user_id
+//     quantity
+//     variant
+//     size
+//     ice
+//     sugar
+//     subtotal
+//     status
+
+
+        $cashiers = DB::table('order')
+            ->join('users', 'user_id', '=', 'users.id')
+            ->select('order.id', 'total', 'amountPaid', 'amountChange', 'customer', 'status', 'payment-status', 'users.name', 'payReference')
+            ->get();
+
+    //   +"id": 2
+    //   +"total": 13500
+    //   +"amountPaid": 100000
+    //   +"amountChange": 86500
+    //   +"customer": "Rehan"
+    //   +"status": "paid"
+    //   +"payment-status": "success"
+    //   +"name": "admin-service"
+    //   +"payReference": "OnCashier_ByCash"
+
+
+        $cashierItems = DB::table('ordered_items')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->join('users', 'user_id', '=', 'users.id')
+            ->select('ordered_items.id', 'order_id', 'menus.name', 'users.name', 'quantity', 'variant', 'size', 'ice', 'sugar', 'subtotal', 'status')
+            ->get();
+
+        // +"id": 2
+        // +"order_id": 2
+        // +"name": "admin-service"
+        // +"quantity": 1
+        // +"variant": "Hot"
+        // +"size": "Reguler"
+        // +"ice": "No Ice"
+        // +"sugar": "Normal Sugar"
+        // +"subtotal": 13500
+        // +"status": "Ordered"
+            
+            
+        // return dd($cashier, $cashierItems);
+        return view('management/order', ['cashiers' => $cashiers] );
+    }
     
+    // Menu management -------------------------------------------------
+    
+    public function detailOrder()
+    {
+        $cashiers = DB::table('order')
+            ->join('users', 'user_id', '=', 'users.id')
+            ->select('total', 'amountPaid', 'amountChange', 'payReference')
+            ->get();
+
+        $cashierItems = DB::table('ordered_items')
+            ->join('menus', 'menu_id', '=', 'menus.id')
+            ->join('users', 'user_id', '=', 'users.id')
+            ->select('ordered_items.id', 'order_id', 'menus.name', 'users.name', 'quantity', 'variant', 'size', 'ice', 'sugar', 'subtotal', 'status')
+            ->get();
+
+        // return dd( $cashierItems);
+        return view('management/orderDetail', ['cashierItems' => $cashierItems] );
+    }
+
+    public function export() 
+    {
+        return Excel::download(new OrderExport(), 'order.xlsx');
+        // return (new OrderExport)->download('invoices.xlsx');
+    }
 }
 
 // str_replace(['+', '-'], '', filter_var($request->input("price_".$p), FILTER_SANITIZE_NUMBER_INT)
