@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 // use App\Http\Middleware\IsAdmin;
 
 // Route::get('/', function () {
@@ -28,6 +29,9 @@ Route::middleware('role:admin')->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     });
+    
+    Route::post('/print', [App\Http\Controllers\HomeController::class, 'reciept'])->name('reciept');
+    
 // Menu Management -----------------------------------
     // Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
     Route::get('/dashboard/menu', [App\Http\Controllers\AdminController::class, 'indexMenu'])->name('menuData');
@@ -55,9 +59,14 @@ Route::middleware('role:admin')->group(function () {
     Route::delete('/dashboard/crew/{id}', [App\Http\Controllers\AdminController::class, 'deleteCrew']);
 // User Management /  -----------------------------------
     
-    // Route::get('/dashboard/order', function () {
-    //     return view('management/order');
-    // });
+    Route::post('/home/order', [App\Http\Controllers\HomeController::class, 'orderPage']);
+    Route::post('/home/order/payment-success', [App\Http\Controllers\HomeController::class, 'paymentSuccess'])->name('payment-success');
+    
+    Route::get('/dashboard/order/export/', [App\Http\Controllers\AdminController::class, 'export']);
+    Route::get('/dashboard/order', [App\Http\Controllers\AdminController::class, 'indexOrder']);
+    Route::get('/dashboard/order/{id}', [App\Http\Controllers\AdminController::class, 'detailOrder']);
+    
+    
     // Route::get('/dashboard/crew', function () {
     //     return view('management/crew');
     // });
