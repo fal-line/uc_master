@@ -14,13 +14,88 @@
 
   <!-- Top Action Bar -->
   <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-    <div class="d-flex align-items-center gap-3">
-      <button class="btn btn-success  btn-lg" id="submitOrderBtn" onclick="openSubmitModal()">Submit Order</button>
-      <!-- <span class="fw-bold">Add Order +</span> -->
-    </div>
+
+  <!-- order modal Bar -->
     <div class="d-flex align-items-center gap-4 me-4">
-      <label class="fw-bold mb-0">Table:</label>
-      <input type="text" class="form-control form-control" style="width: 8rem;">
+      <!-- <label class="fw-bold mb-0">Table:</label>
+      <input type="text" class="form-control form-control" style="width: 8rem;"> -->
+      <button class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#orderModal">Confirm Order <i class="bi bi-cart"></i></button>      
+       <!-- <button id="openCart-btn" class="btn btn-outline-warning btn-lg" >
+          Cart 
+       </button> -->
+
+    </div>
+    
+  <div class="modal" id="orderModal" tabindex="-1" aria-hidden="true">
+
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+
+            <div class="modal-content p-4 rounded-4">
+            <div class="modal-header d-flex justify-content-between align-items-start border-0">
+
+                <h4 class="modal-title fw-bold">Confirm Order</h4>
+                <button type="button" class="btn btn-danger rounded-3 px-3 py-1 fw-bold" data-bs-dismiss="modal">X</button>
+
+            </div>
+                <hr>
+
+            <div class="modal-body">
+                <hr style="margin: -30px 0 20px 0;">
+                @php $total = 0; @endphp
+                  @foreach ($baskets as $index => $rock)
+                      @php $total += $rock->quantity * $rock->price; @endphp
+                      <div class="col" style="margin: 20px 0 0 0;">
+                        <div class="card text-left shadow-sm" >
+
+                            <div class="card-body d-flex flex-column justify-content-between">
+
+                              <div>
+                                  <h4 class="fw-bold">{{ $rock->name }}</h4>
+                                  Variant : <strong>{{ $rock->variant }}</strong> 
+                                  | Size : <strong>{{ $rock->size }}</strong> 
+                                  | Ice : <strong>{{ $rock->ice }}</strong> 
+                                  | Sugar : <strong>{{ $rock->sugar }}</strong>
+
+                                  <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp{{ number_format($rock->price, 0, ',', '.') }} <br> Total : <strong>Rp{{ number_format($rock->subtotal, 0, ',', '.') }}</strong></p>
+                              </div>
+
+                            </div>
+                            
+                        </div>
+                      </div>
+                  @endforeach
+                
+            </div>
+              <hr>
+                <div class="d-flex justify-content-between align-items-center fw-bold">
+                  <h4>Subtotal</h4>
+                  <h4 id="subtotal">Rp{{ number_format($total, 0, ',', '.') }}</h4>
+                </div>
+
+                <div class="row g-3 align-items-center ms-auto me-auto">
+                  <div class="col-auto">
+                    <label for="inputPassword6" class="col-form-label">Costumer Name</label>
+                  </div>
+                    <div class="col-auto">
+                    <form action="/home/order" method="POST">
+                      @csrf
+                      <input type="text" name="customerName" class="form-control">
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-outline-success btn-lg" type="submit" >Confirm Order </i></button> 
+                    </div>
+                  </form> 
+                </div>
+                <div class="d-flex ms-auto me-auto justify-content-between">
+                      
+                </div>
+            </div>
+
+            
+        </div>
+      </div>
+    
+    <div class="d-flex align-items-center gap-4 me-4">
       <button class="btn btn-outline-warning btn-lg" data-bs-toggle="modal" data-bs-target="#cartModal">Cart <i class="bi bi-cart"></i></button>      
        <!-- <button id="openCart-btn" class="btn btn-outline-warning btn-lg" >
           Cart 
@@ -31,29 +106,9 @@
   
     <!-- Cart Modal -->
 
-    <!-- <div  id="cartModal" class="modal" style="display:none">
-      <div class="modal-dialog">
-
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button id="close-cartModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
-
-      </div>
-    </div> -->
-
     <div class="modal" id="cartModal" tabindex="-1" aria-hidden="true">
 
-        <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
 
             <div class="modal-content p-4 rounded-4">
             <div class="modal-header d-flex justify-content-between align-items-start border-0">
@@ -62,6 +117,7 @@
                 <button type="button" class="btn btn-danger rounded-3 px-3 py-1 fw-bold" data-bs-dismiss="modal">X</button>
 
             </div>
+                <hr>
 
             <div class="modal-body">
                 <hr style="margin: -20px 0 20px 0;">
@@ -95,13 +151,15 @@
                         </div>
                       </div>
                   @endforeach
+                
+            </div>
                 <hr>
-                <div class="d-flex justify-content-between align-items-center fw-bold">
+            <div class="d-flex justify-content-between align-items-center fw-bold">
                 <h4>Subtotal</h4>
                 <h4 id="subtotal">Rp{{ number_format($total, 0, ',', '.') }}</h4>
                 </div>
             </div>
-            </div>
+            
         </div>
       </div>
     <hr>
