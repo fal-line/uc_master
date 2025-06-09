@@ -44,8 +44,7 @@ class MenuController extends Controller
                 'user_id' => Auth::id(),
                 'created_at' => now(),
                 'updated_at' => now(),
-            )
-        );
+            ));
         
         return redirect('home');
         
