@@ -190,7 +190,7 @@
                       document.body.appendChild(form);
                       form.submit();
 
-                    });
+                    })
                   },
                   onPending: function(result) {
                       // Tangani jika pembayaran pending
