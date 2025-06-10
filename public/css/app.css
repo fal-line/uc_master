@@ -44,6 +44,18 @@ a:hover {
     color: #fff;
 }
 
+.btn-success {
+    background-color: #503b31 !important;
+}
+/* .btn-outline-success {
+    background-color: #503b31 !important;
+    font: #fff;
+}
+.bs-outline-success {
+    background-color: #503b31 !important;
+    font: #fff;
+} */
+
 .hero-section {
     background-size: cover;
     background-position: center;
