@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -25,14 +26,8 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected function redirectTo()
-    {
-        if (auth()->user()->role === 'admin') {
-            return '/dashboard';
-        }
+    protected $redirectTo = '/home';
 
-        return '/home'; // default redirect untuk selain admin
-    }
     /**
      * Create a new controller instance.
      *
@@ -43,4 +38,12 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
         $this->middleware('auth')->only('logout');
     }
+    
+    // public function logout(Request $request): RedirectResponse
+    // {
+    //     $request->session()->invalidate();
+    //     $request->session()->regenerateToken();
+
+    //     return redirect('/home');
+    // }
 }
