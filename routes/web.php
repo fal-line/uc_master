@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 // use App\Http\Middleware\IsAdmin;
+use App\Http\Controllers\LoginController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -14,17 +15,15 @@ Auth::routes();
 
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('/home', [App\Http\Controllers\MenuController::class, 'orderPage'])->name('home');
+    Route::get('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
     Route::delete('/home', [App\Http\Controllers\MenuController::class, 'destroy']);
+    Route::put('/home', [App\Http\Controllers\MenuController::class, 'reduceItems']);
     Route::post('/home/store', [App\Http\Controllers\MenuController::class, 'store']);
     
     Route::post('/home/order', [App\Http\Controllers\HomeController::class, 'orderPage']);
     Route::post('/home/order/payment-success', [App\Http\Controllers\HomeController::class, 'paymentSuccess'])->name('payment-success');
     Route::post('/print', [App\Http\Controllers\HomeController::class, 'reciept'])->name('reciept');
-    
-
-    
 });
 
 
@@ -80,3 +79,7 @@ Route::middleware('role:admin')->group(function () {
     //     return view('management/payment');
     // });
 });
+
+Auth::routes();
+
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

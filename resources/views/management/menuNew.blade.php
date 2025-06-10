@@ -55,12 +55,12 @@
         </select>
       </div>
 
-      <div class="input-group">
+      <!-- <div class="input-group">
         <div class="input-group-text">
           <input class="form-check-input mt-0" type="checkbox" value="1" name="most_ordered" aria-label="Checkbox for following text input">
         </div>
         <input type="text" class="form-control" value="This menu is most ordered." aria-label="This menu is most ordered." disabled>
-      </div>
+      </div> -->
 
     </div>
 
@@ -122,9 +122,11 @@
             });
             </script> -->
 <script>
+
                 $(document).ready(function(){
                 /* Dengan Rupiah */
                 var dengan_rupiah = document.getElementById('dengan-rupiah');
+
 
                 dengan_rupiah.addEventListener('keyup', function(e)
                 {
