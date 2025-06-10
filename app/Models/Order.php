@@ -24,6 +24,7 @@ class Order extends Model
         'amountChange',
         'customer',
         'status',
+        'payment-status',
         'user_id',
         'payReference',
     ];
