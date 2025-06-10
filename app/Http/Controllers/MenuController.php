@@ -60,6 +60,7 @@ class MenuController extends Controller
 
         // $state = 'hello world';
 
+        // return dd($basketOwner, $baskets);;
         return view('home', ['baskets' => $baskets], compact('groupedItems'));
 
         // return dd($basketOwner, $baskets);;
@@ -70,7 +71,16 @@ class MenuController extends Controller
         // dd(cartItems::find($request->input("delete-target")));
         cartItems::destroy($request->input("delete-target"));
         // $lastAct = $request->_method;
-        return redirect('home')->with('lastAct', 'tes');
+        return redirect('home')->with('lastAct', 'Pesanan Dihapus');
+    }
+
+    public function reduceItems(Request $request)
+    {   
+            DB::table('cart_items')
+                ->where('id', $request->input('update-target'))
+                ->decrement('quantity');
+
+        return redirect('home')->with('lastAct', 'Pesanan Dikurangi');
     }
 
     public function store(Request $request, Menu $menu)
@@ -126,7 +136,7 @@ class MenuController extends Controller
         
         // return dd($cartItem, $request);
             
-        return redirect('home');
+        return redirect('home')->with('lastAct', 'Pesanan Ditambahkan');
     }
     
 }
