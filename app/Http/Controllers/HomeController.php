@@ -9,6 +9,7 @@ use Dompdf\Dompdf;
 use Dompdf\Options;
 use Midtrans\Config;
 use Midtrans\Snap;
+use Exception;
 
 class HomeController extends Controller
 {
@@ -88,6 +89,14 @@ class HomeController extends Controller
                 'status'  => 'Ordered',
             ]);
 
+        DB::table('payment')->insert([
+                'order_id' => $request->input('cartToDelete'),
+                'totalPay' => str_replace(['+', '-'], '', filter_var($request->cashAmount, FILTER_SANITIZE_NUMBER_INT)),
+                'method' => 'Cash',
+                'status' => 'success',
+                'reference' => '-'
+            ]);
+
         $csName = $request->customerName;
         
 
@@ -97,6 +106,7 @@ class HomeController extends Controller
 
     public function orderPage(Request $request)
     {
+
         date_default_timezone_set("Asia/Jakarta"); 
         date("Y/m/d - h:s:i");
 
@@ -191,6 +201,13 @@ class HomeController extends Controller
             ->first();
 
         $orderTarget = $orderTarget->id;    
+        
+        // $money = DB::table('order')
+        //     ->where('id', $orderTarget)
+        //     ->select('total')
+        //     ->get();
+
+        // return dd($money[0]->total);
         // return dd($orderTarget);
         
         // return dd("total belanja ".$total, "Item yg dibeli ".$baskets, "Nama pelanggan ".$csName, "Token ".$snapToken);
@@ -201,13 +218,21 @@ class HomeController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        
+
+        // try {
+
         $basketOwner = DB::table('carts')
             ->where('user_id', Auth::id())
             ->latest() // ambil yang paling baru
             ->first();
         // return dd( $basketOwner );
 
+        try {
+            DB::table('carts')->where('id', $basketOwner->id)->delete();
+        } catch (\Throwable $th) {
+            
+            return redirect('home');
+        }
         DB::table('carts')->where('id', $basketOwner->id)->delete();
 
         DB::table('order')
@@ -228,7 +253,33 @@ class HomeController extends Controller
                 'status'  => 'Ordered',
             ]);
 
+        $money = DB::table('order')
+            ->where('id', $request->input('cartToDelete'))
+            ->select('total')
+            ->get();
+            
+        DB::table('payment')->insert([
+                'order_id' => $request->input('cartToDelete'),
+                'totalPay' => $money[0]->total,
+                'method' => 'QRIS',
+                'status' => 'success',
+                'reference' => $request->input('order_id')
+            ]);
+            
+        $basketOwner = DB::table('carts')
+            ->where('user_id', Auth::id())
+            ->latest() // ambil yang paling baru
+            ->first();
+        // return dd( $basketOwner );
+
+
+        // return dd( $request );
         return redirect('home');
+
+    // } catch (\Exception $e) {
+
+    // }
+        
         
         // return dd( $request->cartToDelete, $request->order_id );
     }

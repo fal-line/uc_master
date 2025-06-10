@@ -58,7 +58,7 @@
 
             <img src="img/payment_placeholder.png" class="card-img">
             <div class="card-img-overlay">
-                <h2 class="card-title mt-3">Peyment Management</h2>
+                <h2 class="card-title mt-3">Payment Record</h2>
                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                 <p class="card-text">Last updated 3 mins ago</p>
             </div>

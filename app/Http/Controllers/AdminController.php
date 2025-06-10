@@ -225,37 +225,11 @@ class AdminController extends Controller
 
     public function indexOrder()
     {
-        
-
-// // table ordered_items
-//     id
-//     order_id
-//     menu_id
-//     user_id
-//     quantity
-//     variant
-//     size
-//     ice
-//     sugar
-//     subtotal
-//     status
-
 
         $cashiers = DB::table('order')
             ->join('users', 'user_id', '=', 'users.id')
             ->select('order.id', 'total', 'amountPaid', 'amountChange', 'customer', 'status', 'payment-status', 'users.name', 'payReference')
             ->get();
-
-    //   +"id": 2
-    //   +"total": 13500
-    //   +"amountPaid": 100000
-    //   +"amountChange": 86500
-    //   +"customer": "Rehan"
-    //   +"status": "paid"
-    //   +"payment-status": "success"
-    //   +"name": "admin-service"
-    //   +"payReference": "OnCashier_ByCash"
-
 
         $cashierItems = DB::table('ordered_items')
             ->join('menus', 'menu_id', '=', 'menus.id')
@@ -263,18 +237,6 @@ class AdminController extends Controller
             ->select('ordered_items.id', 'order_id', 'menus.name', 'users.name', 'quantity', 'variant', 'size', 'ice', 'sugar', 'subtotal', 'status')
             ->get();
 
-        // +"id": 2
-        // +"order_id": 2
-        // +"name": "admin-service"
-        // +"quantity": 1
-        // +"variant": "Hot"
-        // +"size": "Reguler"
-        // +"ice": "No Ice"
-        // +"sugar": "Normal Sugar"
-        // +"subtotal": 13500
-        // +"status": "Ordered"
-            
-            
         // return dd($cashier, $cashierItems);
         return view('management/order', ['cashiers' => $cashiers] );
     }
@@ -298,7 +260,28 @@ class AdminController extends Controller
         return view('management/orderDetail', ['cashierItems' => $cashierItems] );
     }
 
-    public function export() 
+    public function exportOrder() 
+    {
+        return Excel::download(new OrderExport(), 'order.xlsx');
+        // return (new OrderExport)->download('invoices.xlsx');
+    }
+
+    
+    public function indexPayment()
+    {
+
+        $payments = DB::table('payment')
+            // ->join('users', 'user_id', '=', 'users.id')
+            ->select('id', 'order_id', 'totalPay', 'method', 'status', 'reference')
+            ->get();
+
+        // return dd($cashier, $cashierItems);
+        return view('management/payment', ['payments' => $payments] );
+    }
+    
+    // Menu management -------------------------------------------------
+
+    public function exportPayment() 
     {
         return Excel::download(new OrderExport(), 'order.xlsx');
         // return (new OrderExport)->download('invoices.xlsx');

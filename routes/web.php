@@ -14,9 +14,14 @@ Auth::routes();
 
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('/home', [App\Http\Controllers\MenuController::class, 'orderPage'])->name('home');
     Route::delete('/home', [App\Http\Controllers\MenuController::class, 'destroy']);
     Route::post('/home/store', [App\Http\Controllers\MenuController::class, 'store']);
+    
+    Route::post('/home/order', [App\Http\Controllers\HomeController::class, 'orderPage']);
+    Route::post('/home/order/payment-success', [App\Http\Controllers\HomeController::class, 'paymentSuccess'])->name('payment-success');
+    Route::post('/print', [App\Http\Controllers\HomeController::class, 'reciept'])->name('reciept');
     
 
     
@@ -28,9 +33,8 @@ Route::middleware('role:admin')->group(function () {
     
     Route::get('/dashboard', function () {
         return view('dashboard');
-    });
+    })->name('dashboard');
     
-    Route::post('/print', [App\Http\Controllers\HomeController::class, 'reciept'])->name('reciept');
     
 // Menu Management -----------------------------------
     // Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'index'])->name('dashboard');
@@ -59,12 +63,14 @@ Route::middleware('role:admin')->group(function () {
     Route::delete('/dashboard/crew/{id}', [App\Http\Controllers\AdminController::class, 'deleteCrew']);
 // User Management /  -----------------------------------
     
-    Route::post('/home/order', [App\Http\Controllers\HomeController::class, 'orderPage']);
-    Route::post('/home/order/payment-success', [App\Http\Controllers\HomeController::class, 'paymentSuccess'])->name('payment-success');
     
-    Route::get('/dashboard/order/export/', [App\Http\Controllers\AdminController::class, 'export']);
+    Route::get('/dashboard/order/export/', [App\Http\Controllers\AdminController::class, 'exportOrder']);
     Route::get('/dashboard/order', [App\Http\Controllers\AdminController::class, 'indexOrder']);
     Route::get('/dashboard/order/{id}', [App\Http\Controllers\AdminController::class, 'detailOrder']);
+    
+    Route::get('/dashboard/payment/export/', [App\Http\Controllers\AdminController::class, 'exportPayment']);
+    Route::get('/dashboard/payment', [App\Http\Controllers\AdminController::class, 'indexPayment']);
+    // Route::get('/dashboard/order/{id}', [App\Http\Controllers\AdminController::class, 'detailPayment']);
     
     
     // Route::get('/dashboard/crew', function () {
