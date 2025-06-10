@@ -4,10 +4,18 @@
 <!-- Main Content -->
 <main class="container py-4">
 
+    <!-- <script>
+        $(document).ready(function () {
+          showToast('pesannya disini');
+        });
+    </script> -->
+    
 @if(session()->has('lastAct'))
     <script>
         $(document).ready(function () {
-          $('#cartModal').modal('show')
+          $('#cartModal').modal('show');
+
+          showToast('{{session('lastAct')}}');
         });
     </script>
 @endif
@@ -25,7 +33,24 @@
        </button> -->
 
     </div>
-    
+
+    <script>
+           function showToast(message) {
+              document.getElementById('toast-message').textContent = message;
+              const toast = new bootstrap.Toast(document.getElementById('toastSuccess'));
+              toast.show();
+            }
+    </script>
+
+  <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
+    <div id="toastSuccess" class="toast align-items-center text-bg-dark border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="toast-message">Berhasil</div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
   <div class="modal" id="orderModal" tabindex="-1" aria-hidden="true">
 
         <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
@@ -82,7 +107,7 @@
                       <input type="text" name="customerName" class="form-control">
                     </div>
                     <div class="col-auto">
-                        <button class="btn btn-outline-success btn-lg" type="submit" >Confirm Order </i></button> 
+                        <button class="btn btn-success btn-lg" type="submit" >Confirm Order </i></button> 
                     </div>
                   </form> 
                 </div>
@@ -138,14 +163,28 @@
 
                                   <p class="text-muted mb-2"> {{ $rock->quantity }} x Rp{{ number_format($rock->price, 0, ',', '.') }}</p>
                               </div>
+                                <div class="d-flex justify-content-end align-items-center fw-bold pe-3">
+                                  <form action="/home" method="POST">                             
+                                                  @if($rock->quantity != 1)
 
-                              <form action="/home" method="POST">
-                                  @csrf
-                                  @method('DELETE')
-                                  <input type="hidden" name="delete-target" value="{{$rock->id}}">
-                                  <button id="delete" type="submit" class="btn btn-outline-danger">Hapus</button>
-                              </form>
+                                                  <form action="/home" method="POST">
+                                                      @csrf
+                                                      @method('put')
+                                                      <input type="hidden" name="update-target" value="{{$rock->id}}">
+                                                      <button id="update" type="submit" class="btn btn-outline-warning">Kurangi</button>
+                                                  </form>
 
+
+                                                  @endif
+
+                                                      @csrf
+                                                      @method('DELETE')
+                                                      <input type="hidden" name="delete-target" value="{{$rock->id}}">
+                                                      <button id="delete" type="submit" class="btn btn-outline-danger ms-3">Hapus</button>
+                                                  </form>
+
+                                                   
+                                </div>
                             </div>
                             
                         </div>
@@ -171,6 +210,10 @@
     <h2 class="fw-bold mb-3">{{ $category }}</h2>
     <div class="row row-cols-md-4 g-3  mb-5">
         @foreach ($items as $index => $item)
+
+
+        
+
         <div class="col">
             <a   data-bs-toggle="modal"data-bs-target="#drinkDetailModal{{ str_replace(' ', '', $item->name ) }}" >
 
