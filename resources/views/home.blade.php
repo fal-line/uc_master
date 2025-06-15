@@ -177,6 +177,7 @@
 
                                                   @endif
 
+                                                  <form action="/home" method="POST">
                                                       @csrf
                                                       @method('DELETE')
                                                       <input type="hidden" name="delete-target" value="{{$rock->id}}">
@@ -216,7 +217,6 @@
 
         <div class="col">
             <a   data-bs-toggle="modal"data-bs-target="#drinkDetailModal{{ str_replace(' ', '', $item->name ) }}" >
-
           <div class="card text-center shadow-sm rounded-image-menu" style="width: 18rem;">
               <img src="{{ $item->img_url }}" class="img-box bg-light d-flex justify-content-center align-items-center rounded-image-menu" style="height: 200px;" alt="{{ $item->name }}">
               <div class="card-body d-flex flex-column justify-content-between border-secondar">
@@ -234,8 +234,10 @@
         <!-- Drink Detail Modal -->
         <div class="modal" id="drinkDetailModal{{ str_replace(' ', '', $item->name ) }}" tabindex="-1" aria-hidden="true">
           <div class="modal-dialog modal-dialog-centered">
+            
             <form id="drinkDetailForm" class="modal-content p-4 rounded-4" method="POST" action="/home/store">
               @CSRF
+
               <div class="modal-header border-0">
                 <h4 class="modal-title fw-bold" id="drinkDetailTitle">{{ $item->name }}</h4>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -245,10 +247,19 @@
 
               <div class="modal-body">
                 <label class="fw-bold">Choose Variant</label>
+            @if($category != "Snack")
                 <select class="form-select mb-4" name="variant-{{ $item->id }}">
                   <option value="Hot">Hot</option>
                   <option value="Cold">Cold</option>
                 </select>
+            @elseif($category == "Snack")
+
+                <select class="form-select mb-4" name="variant-{{ $item->id }}">
+                  <option value="Spicy">Spicy</option>
+                  <option value="Mild">Mild</option>
+                  <option value="Not Spicy">Not Spicy</option>
+                </select>
+            @endif
                 
                 <div id="ice-options-{{ $item->id }}" name="ice-name-{{$item->id}}">
                     <label class="fw-bold">Ice</label>
@@ -270,10 +281,12 @@
 
                 <label class="fw-bold">Size</label>
                 <div class="row row-cols-2 g-3 mb-2">
-                  <div class="form-check ms-3">
-                    <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Small" id="size-Small">
-                    <label class="form-check-label" for="size-Small">Small</label>
-                  </div>
+                @if($category != "Snack")
+                      <div class="form-check ms-3">
+                        <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Small" id="size-Small">
+                        <label class="form-check-label" for="size-Small">Small</label>
+                      </div>
+                @endif
                   <div class="form-check ms-3">
                     <input class="form-check-input border-dark" type="radio" name="size-{{$item->id}}" value="Reguler" id="size-reguler" checked>
                     <label class="form-check-label" for="size-reguler">Regular</label>
@@ -285,6 +298,7 @@
                 </div>
 
 
+                @if($category != "Snack")
                 <label class="fw-bold">Sweetness</label>
                 <div class="row row-cols-2 g-3">
                   <div class="form-check ms-3">
@@ -300,6 +314,10 @@
                     <label class="form-check-label" for="sugar-normal">Normal Sugar</label>
                   </div>
                 </div>
+                
+                @elseif($category == "Snack")
+                  <input type="hidden" name="sugar-{{$item->id}}" value="-">
+                @endif
               </div>
               <div class="modal-footer border-0 justify-content-end">
                 <button type="submit" class="btn btn-primary px-4 py-2 fw-bold d-flex align-items-center gap-2">
@@ -307,6 +325,7 @@
                 </button>
               </div>
             </form>
+
           </div>
         </div>
         <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1080">
@@ -334,8 +353,8 @@
                 } else {
                     $(`#ice-options-{{ $item->id }}`).hide();
                     
-                    $('#ice-less-{{ $item->id }}').val("No Ice");
-                    $('#ice-normal-{{ $item->id }}').val("No Ice");
+                    $('#ice-less-{{ $item->id }}').val("-");
+                    $('#ice-normal-{{ $item->id }}').val("-");
 
                     // Hapus input hidden jika ada
                     // $(`#ice-null-{{ $item->id }}`).remove();
