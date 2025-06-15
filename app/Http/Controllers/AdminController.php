@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Menu;
 use App\Models\User;
 use App\Exports\OrderExport;
+use App\Exports\PaymentExport;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -283,7 +284,7 @@ class AdminController extends Controller
 
     public function exportPayment() 
     {
-        return Excel::download(new OrderExport(), 'order.xlsx');
+        return Excel::download(new PaymentExport(), 'payment.xlsx');
         // return (new OrderExport)->download('invoices.xlsx');
     }
 }
