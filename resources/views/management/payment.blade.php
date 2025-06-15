@@ -5,7 +5,7 @@
 <main class="container py-4">
 @include('layouts.goBack')
 
-    <a href="/dashboard/order/export/" class="text-white align-middle">
+    <a href="/dashboard/payment/export/" class="text-white align-middle">
             <button  class="btn btn-outline-secondary">
                 Export To XLSX
             </button>
@@ -41,7 +41,7 @@
       <td class="align-middle">{{ $payment->status }}</td>
       <td class="align-middle">{{ $payment->reference }}</td>
       <td class="align-middle">
-        <a href="/dashboard/order/{{ $payment->id }}" class="text-white align-middle">
+        <a href="/dashboard/payment/{{ $payment->id }}" class="text-white align-middle">
             <button  class="btn btn-outline-secondary">
                 void
             </button>
